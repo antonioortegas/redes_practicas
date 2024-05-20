@@ -35,7 +35,7 @@ class ServerTCP {
 
     public static void main(String[] args) throws IOException {
         // Puerto por el que recibo peticiones
-        int port = 12000; // int port = Integer.parseInt(args[0]);
+        int port = 12345; // int port = Integer.parseInt(args[0]);
 
         ServerSocket server = null; // Pasivo (recepción de peticiones)
         try {
@@ -62,9 +62,20 @@ class ServerTCP {
                 String line = in.readLine();
                 System.out.println("Recibido: " + line);
                 // Modificar o tratar
-                String respuesta = line;
+                String respuesta = "";
+                if(!Character.isDigit(line.charAt(0))){
+                    // Si el mensaje no empieza por un número, se finaliza la conexió
+                    System.out.println("Finalizando conexión");
+                    // Enviar respuesta
+                    respuesta = "OK";
+                    salir = true;
+                    out.println(respuesta);
+                } else {
+                    respuesta = extract_text(line);
+
+                }
                 out.println(respuesta);
-                salir = true;
+
             }
 
             in.close();

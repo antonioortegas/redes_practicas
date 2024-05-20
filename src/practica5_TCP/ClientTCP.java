@@ -1,24 +1,57 @@
 package practica5_TCP;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class ClientTCP {
 
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("127.0.0.1", 12000);
+        String ip = "127.0.0.1";
+        int port = 12345;
+        Socket socket = new Socket(ip, port);
 
         // Obtener flujos
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true, StandardCharsets.UTF_8);
+
 
         // Leer de teclado
+        boolean valido = true;
+        while (valido) {
+            System.out.print("Introduzca el mensaje: ");
+            String input = "";
+            Scanner scanner = new Scanner(System.in);
+            input = scanner.nextLine();
+            System.out.println(input);
 
-        // mientras que lo leído sea correcto
+            // mientras que lo leído sea correcto
             // enviar mensaje
             // recibir respuesta
-        
-        // Enviar FINISH
-        // recibir OK
 
+            // si el mensaje empieza por un numero
+            if(Character.isDigit(input.charAt(0))){
+                // enviar mensaje
+                out.println(input);
+                // recibir respuesta
+            } else {
+                valido = false;
+                // enviar mensaje de FINISH
+                out.println("FINISH");
+                // recibir respuesta
+            }
+            String respuesta = in.readLine();
+            System.out.println("Respuesta: " + respuesta);
+        }
         // Finalizar y liberar recursos
+        in.close();
+        out.close();
+        socket.close();
+
     }
 }
