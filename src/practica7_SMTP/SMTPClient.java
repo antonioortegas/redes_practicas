@@ -1,4 +1,4 @@
-package practica6_SMTP;
+package practica7_SMTP;
 
 import java.util.ArrayList;
 import java.util.List;
