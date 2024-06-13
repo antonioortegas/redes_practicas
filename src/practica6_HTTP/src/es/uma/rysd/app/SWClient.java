@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -14,7 +15,7 @@ import es.uma.rysd.entities.*;
 
 public class SWClient {
 	// TODO: Complete the application name
-	private final String app_name = "Placeholder";
+	private final String app_name = "aos-swapi-client";
 	private final int year = 2024;
 
 	private final String url_api = "https://swapi.dev/api/";
@@ -29,7 +30,6 @@ public class SWClient {
 	// Given a resource URL, gets its ID
 	public Integer extractIdFromUrl(String url){
 		String[] parts = url.split("/");
-
 		return Integer.parseInt(parts[parts.length-1]);
 	}
 
@@ -94,6 +94,12 @@ public class SWClient {
 			Gson parser = new Gson();
 			InputStream in = connection.getInputStream();
 			p = parser.fromJson(new InputStreamReader(in), Person.class);
+			// For questions 2 and 3 (do not need to complete this for question 1)
+			// From the URL in the homeworld field, get the planet data and store it in the homeplanet attribute
+			if (p.homeworld != null) {
+				World w = getWorld(p.homeworld);
+				p.homeplanet = w;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -101,44 +107,69 @@ public class SWClient {
 	}
 
 	public World getWorld(String urlname) {
-		World p = null;
+		World w = null;
 		// Just in case it comes as http, we change it to https
 		urlname = urlname.replaceAll("http:", "https:");
-
-		// TODO: Handle possible exceptions appropriately
-
-		// TODO: Create the connection from the received URL
-
-		// TODO: Add the headers User-Agent and Accept (see the statement)
-
-		// TODO: Indicate that it is a GET request
-
-		// TODO: Check that the response code received is correct
-
-		// TODO: Deserialize the response to Planet
-
-		return p;
+		// Handle possible exceptions appropriately
+		try {
+			// Create the connection from the received URL
+			URL url = new URL(urlname);
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			// Add the headers User-Agent and Accept (see the statement)
+			connection.setRequestProperty("Accept", "application/json");
+			connection.setRequestProperty("User-Agent", app_name + "-" + year);
+			// Indicate that it is a GET request
+			connection.setRequestMethod("GET");
+			// Check that the response code received is correct
+			int responseCode = connection.getResponseCode();
+			if(responseCode / 100 != 2) {
+				System.err.println("ERROR: El codigo de respuesta " + responseCode + " no es un 2XX");
+				return w;
+			}
+			// Deserialize the response to Person
+			Gson parser = new Gson();
+			InputStream in = connection.getInputStream();
+			w = parser.fromJson(new InputStreamReader(in), World.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return w;
 	}
 
 	public Person searchPersonByName(String name){
 		Person p = null;
-		// TODO: Handle possible exceptions appropriately
-
-		// TODO: Create the connection from the URL (url_api + name processed - see the statement)
-
-		// TODO: Add the headers User-Agent and Accept (see the statement)
-
-		// TODO: Indicate that it is a GET request
-
-		// TODO: Check that the response code received is correct
-
-		// TODO: Deserialize the response to SearchResponse -> Use the first position of the array as the result
-
-		// TODO: For questions 2 and 3 (do not need to complete this for question 1)
-		
-		// TODO: From the URL in the homeworld field, get the planet data and store it in the homeplanet attribute
-
+		// Realizar una petición a la URL https://swapi.dev/api/people/?search=<nombre> (sustituyendo <nombre> por el parámetro)
+		// Handle possible exceptions appropriately
+		try {
+			// Create the connection from the URL (url_api + name processed - see the statement)
+			name = URLEncoder.encode(name, "utf-8");
+			URL url = new URL(url_api + "people/?search=" + name);
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			// Add the headers User-Agent and Accept (see the statement)
+			connection.setRequestProperty("Accept", "application/json");
+			connection.setRequestProperty("User-Agent", app_name + "-" + year);
+			// Indicate that it is a GET request
+			connection.setRequestMethod("GET");
+			// Check that the response code received is correct
+			int responseCode = connection.getResponseCode();
+			if (responseCode / 100 != 2) {
+				System.err.println("ERROR: El codigo de respuesta " + responseCode + " no es un 2XX");
+				return p;
+				}
+			// Deserialize the response to SearchResponse -> Use the first position of the array as the result
+			Gson parser = new Gson();
+			InputStream in = connection.getInputStream();
+			QueryResponse qr = parser.fromJson(new InputStreamReader(in), QueryResponse.class);
+			if (qr.results.length > 0) {
+				p = qr.results[0];
+				// For questions 2 and 3 (do not need to complete this for question 1)
+				// From the URL in the homeworld field, get the planet data and store it in the homeplanet attribute
+				World w = getWorld(p.homeworld);
+				p.homeplanet = w;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return p;
 	}
-
 }
