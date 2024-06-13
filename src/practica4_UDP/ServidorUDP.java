@@ -57,5 +57,6 @@ public class ServidorUDP {
             }
 
         }
+        s.close();
     }
 }

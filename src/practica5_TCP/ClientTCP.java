@@ -20,13 +20,12 @@ public class ClientTCP {
                 new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true, StandardCharsets.UTF_8);
 
-
+        Scanner scanner = new Scanner(System.in);
         // Leer de teclado
         boolean valido = true;
         while (valido) {
             System.out.print("Introduzca el mensaje: ");
             String input = "";
-            Scanner scanner = new Scanner(System.in);
             input = scanner.nextLine();
             System.out.println(input);
 
@@ -51,6 +50,7 @@ public class ClientTCP {
         // Finalizar y liberar recursos
         in.close();
         out.close();
+        scanner.close();
         socket.close();
 
     }

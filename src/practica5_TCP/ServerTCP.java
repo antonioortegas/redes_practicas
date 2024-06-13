@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 class ServerTCP {
@@ -81,6 +80,7 @@ class ServerTCP {
             in.close();
             out.close();
             client.close();
+            server.close();
         }
     } // fin del metodo
 }
