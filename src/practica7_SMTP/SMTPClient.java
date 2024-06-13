@@ -50,7 +50,6 @@ public class SMTPClient {
 	static void enviar(String mensaje){
 		// Mostramos por consola el mensaje a enviar
         System.out.println("C: " + mensaje);
-        // TODO: Recordar en añadir en cada mensaje el \r\n
 		mensaje = mensaje + "\r\n";
         try {
     	    // Envia usando con write
@@ -79,11 +78,8 @@ public class SMTPClient {
         recv = recv.substring(0,recv.lastIndexOf('\r'));
         // ... y lo mostramos por pantalla
         System.out.println("S: "+ recv);
-        // TODO: Validar si el código obtenido es correcto (1xx, 2xx, 3xx) o incorrecto (4xx, 5xx)
         if(recv.charAt(0) == 4 || recv.charAt(0) == 5){
-            // TODO: Si es incorrecto enviar al servidor un RSET (use el método enviar)
             enviar("RSET");
-            // TODO: Envíe luego el comando QUIT
             enviar("QUIT");
         	// Desconectamos del servidor
         	desconectar();
@@ -115,7 +111,6 @@ public class SMTPClient {
 			System.out.println("Dime el correo del emisor: ");
 			origen = stdIn.readLine();
 		}
-        // TODO: enviar origen del mensaje y su recibir su respuesta
         enviar("MAIL FROM:<" + origen + ">");
         recibir();
 		
@@ -127,20 +122,16 @@ public class SMTPClient {
 			destino = stdIn.readLine();
 			if(!destino.equals("")){
 				destinos.add(destino);
-                // TODO: enviar el destino del mensaje y su recibir su respuesta
                 enviar("RCPT TO:<" + destino + ">");
                 recibir();
 			}		
 		}
 		
 		// Ahora enviamos el correo: cabeceras + cuerpo
-        // TODO: Enviamos el DATA y recibimos la respuesta
         enviar("DATA");
         recibir();
 		// Cabeceras:
-        // TODO: Enviar la cabecera From: (no hay que recibir respuesta)
         enviar("From: <" + origen + ">");
-        // TODO: Enviar las cabeceras To: (no hay que recibir respuesta)
         for (String d : destinos) {
             enviar("To: <" + d + ">");
         }
@@ -150,9 +141,7 @@ public class SMTPClient {
 			System.out.println("Dime el asunto del correo: ");
 			asunto = stdIn.readLine();
 		}
-		// TODO: enviar la cabecera Subject: (no hay que recibir respuesta)
 		enviar("Subject: " + asunto);
-		// TODO: Enviamos una línea en blanco para separar las cabeceras del cuerpo
         enviar("");
 		// Ahora el cuerpo que son muchas líneas
 		String cuerpo = "";
@@ -160,13 +149,10 @@ public class SMTPClient {
 		do{
 			cuerpo = stdIn.readLine();
 			if(!cuerpo.equals("")){
-                // TODO: enviar la línea (no hay que recibir respuesta)
                 enviar(cuerpo);
 			}		
 		}while(!cuerpo.equals(""));
-		// TODO: Enviar una línea en blanco y luego un punto para acabar y recibir la respuesta
         enviar("\r\n.");
-		// TODO: Enviar QUIT para acabar y recibir la respuesta
         enviar("QUIT");
         recibir();
 		// Nos desconectamos del servidor
@@ -174,5 +160,4 @@ public class SMTPClient {
 		desconectar();
 		System.out.println("Desconectado!");
 	}
-
 }
