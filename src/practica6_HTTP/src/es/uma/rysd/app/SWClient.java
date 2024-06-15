@@ -196,6 +196,7 @@ public class SWClient {
 			connection.setRequestProperty("User-Agent", app_name + "-" + year);
 			// Indicate that it is a GET request
 			connection.setRequestMethod("GET");
+			// System.out.println(connection.getHeaderFields().toString());
 		} catch (IOException e) {
 			System.err.println("ERROR: No se ha podido crear la conexion");
 			e.printStackTrace();

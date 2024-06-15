@@ -49,8 +49,8 @@ public class Main {
 			// whoBornIn1(sw);
 			// whoBornIn2(sw);
 			// mostExpensiveStarship(sw);
-			// howManyMovies(sw);
-			whoWeighsMore(sw);
+			howManyMovies(sw);
+			// whoWeighsMore(sw);
 			System.out.println("Desea otra ronda (s/n)?");
 			response = sc.nextLine();
 		} while (response.equals("s"));
