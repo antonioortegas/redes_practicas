@@ -18,17 +18,9 @@ jar: $(P7_JAR)
 video: $(VIDEO_SCRIPT)
 	python $(VIDEO_SCRIPT)
 
-# Target to remove all generated files
-# Removes everything in the practica6_HTTP/bin and practica6_HTTP/video/media directories
-clean:
-	rm -rf practica6_HTTP/bin/*
-	rm -rf practica6_HTTP/video/media/*
-
-
 # Help target to display usage information
 help:
 	@echo "Usage:"
 	@echo "  make jar    - Run the jar file fakeSMTP"
 	@echo "  make video  - Run the script.py"
-	@echo "  make clean  - Remove all generated files"
 	@echo "  make help   - Display this help message"
