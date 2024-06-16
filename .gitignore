@@ -1,6 +1,7 @@
 *app.log
 src/practica6_HTTP/video/media/
 src/practica6_HTTP/video/*cache*
+*.pcapng
 
 ### IntelliJ IDEA ###
 out/
